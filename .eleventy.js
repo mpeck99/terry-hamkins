@@ -35,6 +35,9 @@ export default async function (eleventyConfig) {
     galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
+  eleventyConfig.addWatchTarget("src/assets/js/site.js");
+  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
+
   return {
     dir: {
       input: "src",

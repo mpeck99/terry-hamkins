@@ -29,7 +29,29 @@ header {
     stroke: var(--clr-green-lime);
 
     filter: drop-shadow(6px 10px 8px rgb(0 0 0 / 0.6));
+
+    z-index: 2;
+
+    transition: transform ease-out 0.2s;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+    }
   }
+}
+
+.creepy-trey {
+  position: fixed;
+  width: 150px;
+  height: auto;
+
+  left: -100px;
+  right: -100px;
+
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+
+  z-index: 2;
 }
 
 main {
@@ -38,4 +60,24 @@ main {
   height: 100%;
 
   z-index: 1;
+}
+
+.falling-image {
+  position: fixed;
+  top: -150px;
+
+  animation: fall 5s linear infinite;
+
+  z-index: 10;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-150px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
 }
