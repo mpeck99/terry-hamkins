@@ -28,11 +28,11 @@ export default async function (eleventyConfig) {
   eleventyConfig.addLayoutAlias("default", "_includes/base-layout.njk");
 
   // Get images from /src/assets/images
-  const galleryImages = fg.sync(["src/assets/images/*", "!dist"]);
+  const galleryImages = fg.sync(["src/assets/images/gallery/*", "!dist"]);
 
   // Create gallery collection with correct public paths
   eleventyConfig.addCollection("gallery", () =>
-    galleryImages.map((img) => `/assets/images/${img.split("/").pop()}`)
+    galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
   return {

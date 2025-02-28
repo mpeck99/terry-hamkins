@@ -10,14 +10,23 @@ body {
   display: flex;
   flex-direction: column;
 
+  position: relative;
+
   background: var(--clr-black);
 }
 
 header {
+  position: fixed;
+
+  left: 1rem;
+  top: 1rem;
+
   .logo {
     max-width: 4rem;
 
     stroke: var(--clr-green-lime);
+
+    filter: drop-shadow(6px 10px 8px rgb(0 0 0 / 0.6));
   }
 }
 
