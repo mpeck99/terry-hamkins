@@ -3,48 +3,44 @@ import fs from "fs";
 import fg from "fast-glob";
 
 export default function (eleventyConfig) {
-  // ✅ Passthrough copy for images (Ensures gallery images are copied)
+  // ✅ Make sure images are copied to dist
   eleventyConfig.addPassthroughCopy({
-    "src/assets/images/gallery": "assets/images/gallery",
+    "src/assets/images/gallery": "dist/assets/images/gallery",
   });
-
-  // ✅ Passthrough copy for other assets
-  eleventyConfig.addPassthroughCopy("src/assets/images");
   eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
 
-  // ✅ Watch SASS files for changes
+  // ✅ Watch SASS files
   eleventyConfig.addWatchTarget("src/assets/css");
 
   // ✅ Compile SASS before Eleventy builds
   eleventyConfig.on("beforeBuild", () => {
     const result = sass.renderSync({ file: "src/assets/css/styles.scss" });
 
-    // Ensure the output directory exists before writing the file
+    // Ensure the output directory exists
     fs.mkdirSync("dist/assets/css", { recursive: true });
     fs.writeFileSync("dist/assets/css/styles.css", result.css);
 
-    // Passthrough the generated CSS file
+    // Passthrough CSS
     eleventyConfig.addPassthroughCopy({
       "dist/assets/css/styles.css": "assets/css/styles.css",
     });
   });
 
-  // ✅ Layout aliasing
+  // ✅ Layout alias
   eleventyConfig.addLayoutAlias("default", "_includes/base-layout.njk");
 
-  // ✅ Get images from `/src/assets/images/gallery`
-  const galleryImages = fg.sync([
-    "src/assets/images/gallery/*.{jpg,png,gif,webp,svg}",
-  ]);
+  // ✅ Use correct relative paths for Netlify
+  const galleryImages = fg.sync(
+    "src/assets/images/gallery/*.{jpg,png,gif,webp,svg}"
+  );
 
-  // ✅ Create gallery collection with correct paths
   eleventyConfig.addCollection("gallery", () =>
     galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
-  // ✅ Debugging logs to check if images are found
+  // ✅ Log output for debugging on Netlify
   eleventyConfig.on("afterBuild", () => {
-    console.log("✅ Gallery images:", galleryImages);
+    console.log("✅ Gallery images found:", galleryImages);
   });
 
   return {
