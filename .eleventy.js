@@ -1,49 +1,50 @@
 import sass from "sass";
 import fs from "fs";
+import fg from "fast-glob";
 
-export default async function (eleventyConfig) {
-  const { default: fg } = await import("fast-glob");
+export default function (eleventyConfig) {
+  // ✅ Passthrough copy for images (Ensures gallery images are copied)
+  eleventyConfig.addPassthroughCopy({
+    "src/assets/images/gallery": "assets/images/gallery",
+  });
 
-  // ✅ Fix 1: Removed unnecessary passthrough copy for "dist/assets/images"
+  // ✅ Passthrough copy for other assets
   eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
 
-  // Watch SASS files for changes
+  // ✅ Watch SASS files for changes
   eleventyConfig.addWatchTarget("src/assets/css");
 
-  // ✅ Fix 2: Ensure SASS compiles and copies CSS before Eleventy builds
+  // ✅ Compile SASS before Eleventy builds
   eleventyConfig.on("beforeBuild", () => {
     const result = sass.renderSync({ file: "src/assets/css/styles.scss" });
 
-    // Ensure the dist/assets/css folder exists before writing
+    // Ensure the output directory exists before writing the file
     fs.mkdirSync("dist/assets/css", { recursive: true });
     fs.writeFileSync("dist/assets/css/styles.css", result.css);
 
-    // Ensure CSS gets copied properly
+    // Passthrough the generated CSS file
     eleventyConfig.addPassthroughCopy({
       "dist/assets/css/styles.css": "assets/css/styles.css",
     });
   });
 
-  // Layout aliasing
+  // ✅ Layout aliasing
   eleventyConfig.addLayoutAlias("default", "_includes/base-layout.njk");
 
-  // ✅ Fix 3: Correct gallery collection paths
-  const galleryImages = fg.sync(["src/assets/images/gallery/*"]);
+  // ✅ Get images from `/src/assets/images/gallery`
+  const galleryImages = fg.sync([
+    "src/assets/images/gallery/*.{jpg,png,gif,webp,svg}",
+  ]);
 
+  // ✅ Create gallery collection with correct paths
   eleventyConfig.addCollection("gallery", () =>
     galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
-  // ✅ Fix 4: Ensure JavaScript is copied correctly
-  eleventyConfig.addWatchTarget("src/assets/js/site.js");
-  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
-
-  // ✅ Fix 5: Debug log to verify images exist in production
+  // ✅ Debugging logs to check if images are found
   eleventyConfig.on("afterBuild", () => {
-    console.log(
-      "✅ Gallery images copied:",
-      fg.sync(["dist/assets/images/gallery/*"])
-    );
+    console.log("✅ Gallery images:", galleryImages);
   });
 
   return {
