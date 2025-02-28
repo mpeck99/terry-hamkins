@@ -4,13 +4,13 @@ import fs from "fs";
 export default async function (eleventyConfig) {
   const { default: fg } = await import("fast-glob");
 
-  // Passthrough copy for images
-  eleventyConfig.addPassthroughCopy("dist/assets/images");
+  // ✅ Fix 1: Removed unnecessary passthrough copy for "dist/assets/images"
+  eleventyConfig.addPassthroughCopy("src/assets/images");
 
   // Watch SASS files for changes
   eleventyConfig.addWatchTarget("src/assets/css");
 
-  // Compile SASS before Eleventy builds
+  // ✅ Fix 2: Ensure SASS compiles and copies CSS before Eleventy builds
   eleventyConfig.on("beforeBuild", () => {
     const result = sass.renderSync({ file: "src/assets/css/styles.scss" });
 
@@ -18,7 +18,7 @@ export default async function (eleventyConfig) {
     fs.mkdirSync("dist/assets/css", { recursive: true });
     fs.writeFileSync("dist/assets/css/styles.css", result.css);
 
-    // Now that the CSS exists, add passthrough copy
+    // Ensure CSS gets copied properly
     eleventyConfig.addPassthroughCopy({
       "dist/assets/css/styles.css": "assets/css/styles.css",
     });
@@ -27,16 +27,24 @@ export default async function (eleventyConfig) {
   // Layout aliasing
   eleventyConfig.addLayoutAlias("default", "_includes/base-layout.njk");
 
-  // Get images from /src/assets/images
-  const galleryImages = fg.sync(["src/assets/images/gallery/*", "!dist"]);
+  // ✅ Fix 3: Correct gallery collection paths
+  const galleryImages = fg.sync(["src/assets/images/gallery/*"]);
 
-  // Create gallery collection with correct public paths
   eleventyConfig.addCollection("gallery", () =>
     galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
+  // ✅ Fix 4: Ensure JavaScript is copied correctly
   eleventyConfig.addWatchTarget("src/assets/js/site.js");
-  eleventyConfig.addPassthroughCopy("dist/assets/js/site.js");
+  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
+
+  // ✅ Fix 5: Debug log to verify images exist in production
+  eleventyConfig.on("afterBuild", () => {
+    console.log(
+      "✅ Gallery images copied:",
+      fg.sync(["dist/assets/images/gallery/*"])
+    );
+  });
 
   return {
     dir: {
