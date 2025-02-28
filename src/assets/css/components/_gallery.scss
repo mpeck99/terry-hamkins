@@ -3,9 +3,39 @@
 // Gallery
 //===---------------------------===
 //---------------------------------
+
 img {
-  max-height: 20rem;
-  width: auto;
-  max-width: 25rem;
-  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+figure {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  margin-bottom: 10px;
+  break-inside: avoid;
+}
+
+figure > img {
+  grid-row: 1 / -1;
+  grid-column: 1;
+}
+
+figure a {
+  color: black;
+  text-decoration: none;
+}
+
+figcaption {
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.2em 0.5em;
+  justify-self: start;
+}
+
+.gallery {
+  column-count: 4;
+  column-gap: 10px;
 }

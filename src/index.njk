@@ -3,8 +3,10 @@ layout: base-layout.njk
 title: Home
 ---
 
-{% for image in collections.gallery %}
-<figure>
-  <img src="{{ image }}" alt="" />
-</figure>
-{% endfor %}
+<div class="gallery">
+  {% for image in collections.gallery %}
+  <figure>
+    <a href="{{ index + 1 }}"><img src="{{ image }}" alt="" /></a>
+  </figure>
+  {% endfor %}
+</div>
