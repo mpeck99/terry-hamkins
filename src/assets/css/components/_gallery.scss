@@ -6,20 +6,27 @@
 
 img {
   max-width: 100%;
+
   display: block;
 }
 
 figure {
-  margin: 0;
   display: grid;
   grid-template-rows: 1fr auto;
-  margin-bottom: 10px;
+
+  margin: 0;
+  margin-bottom: 5px;
+
   break-inside: avoid;
+
+  position: relative;
 }
 
 figure > img {
   grid-row: 1 / -1;
   grid-column: 1;
+
+  margin: 0 auto;
 }
 
 figure a {
@@ -30,12 +37,44 @@ figure a {
 figcaption {
   grid-row: 2;
   grid-column: 1;
+
   background-color: rgba(255, 255, 255, 0.5);
-  padding: 0.2em 0.5em;
+
   justify-self: start;
 }
 
 .gallery {
-  column-count: 4;
+  column-count: 5;
   column-gap: 10px;
+}
+
+.gallery-controls {
+  max-width: fit-content;
+  max-height: 4rem;
+
+  position: absolute;
+  bottom: 0rem;
+  right: 0rem;
+
+  padding: 0.25rem;
+
+  background: hsla(138 93% 11% / 0.8);
+
+  border-top-left-radius: 0.25rem;
+}
+
+.gallery-btn {
+  background: transparent;
+  border: none;
+
+  svg {
+    stroke: var(--clr-green-lime);
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      stroke: #13c4d8;
+    }
+  }
 }
