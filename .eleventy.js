@@ -5,7 +5,7 @@ export default async function (eleventyConfig) {
   const { default: fg } = await import("fast-glob");
 
   // Passthrough copy for images
-  eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("dist/assets/images");
 
   // Watch SASS files for changes
   eleventyConfig.addWatchTarget("src/assets/css");
@@ -36,7 +36,7 @@ export default async function (eleventyConfig) {
   );
 
   eleventyConfig.addWatchTarget("src/assets/js/site.js");
-  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
+  eleventyConfig.addPassthroughCopy("dist/assets/js/site.js");
 
   return {
     dir: {
