@@ -1,0 +1,10 @@
+---
+layout: base-layout.njk
+title: Home
+---
+
+{% for image in collections.gallery %}
+<figure>
+  <img src="{{ image }}" alt="" />
+</figure>
+{% endfor %}
