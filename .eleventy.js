@@ -3,21 +3,25 @@ import fs from "fs";
 import fg from "fast-glob";
 
 export default function (eleventyConfig) {
-  // ✅ Ensure images and their subfolders are copied
+  // ✅ Ensure full images directory (including gallery) is copied
   eleventyConfig.addPassthroughCopy({ "src/assets/images": "assets/images" });
 
-  // ✅ Watch SASS files
+  // ✅ Ensure JavaScript files are copied
+  eleventyConfig.addPassthroughCopy({ "src/assets/js": "assets/js" });
+
+  // ✅ Watch CSS and JS files for changes
   eleventyConfig.addWatchTarget("src/assets/css");
+  eleventyConfig.addWatchTarget("src/assets/js");
 
   // ✅ Compile SASS before Eleventy builds
   eleventyConfig.on("beforeBuild", () => {
     const result = sass.renderSync({ file: "src/assets/css/styles.scss" });
 
-    // Ensure the output directory exists
+    // Ensure the output directories exist
     fs.mkdirSync("dist/assets/css", { recursive: true });
     fs.writeFileSync("dist/assets/css/styles.css", result.css);
 
-    // Passthrough CSS
+    // Ensure the CSS is copied properly
     eleventyConfig.addPassthroughCopy({
       "dist/assets/css/styles.css": "assets/css/styles.css",
     });
@@ -26,14 +30,16 @@ export default function (eleventyConfig) {
   // ✅ Layout alias
   eleventyConfig.addLayoutAlias("default", "_includes/base-layout.njk");
 
-  // ✅ Use correct relative paths for Netlify
+  // ✅ Correctly fetch gallery images from the right folder
   const galleryImages = fg.sync(
     "src/assets/images/gallery/*.{jpg,png,gif,webp,svg}"
   );
 
-  eleventyConfig.addCollection("gallery", () =>
-    galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
-  );
+  eleventyConfig.addCollection("gallery", () => {
+    return galleryImages.map((img) => {
+      return `/assets/images/gallery/${img.split("/").pop()}`;
+    });
+  });
 
   // ✅ Debugging Log
   eleventyConfig.on("afterBuild", () => {
