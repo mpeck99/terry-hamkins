@@ -9,6 +9,16 @@ body {
 
   display: flex;
   flex-direction: column;
+
+  background: var(--clr-black);
+}
+
+header {
+  .logo {
+    max-width: 4rem;
+
+    stroke: var(--clr-green-lime);
+  }
 }
 
 main {
