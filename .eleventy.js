@@ -3,11 +3,8 @@ import fs from "fs";
 import fg from "fast-glob";
 
 export default function (eleventyConfig) {
-  // ✅ Make sure images are copied to dist
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/images/gallery": "dist/assets/images/gallery",
-  });
-  eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
+  // ✅ Ensure images and their subfolders are copied
+  eleventyConfig.addPassthroughCopy({ "src/assets/images": "assets/images" });
 
   // ✅ Watch SASS files
   eleventyConfig.addWatchTarget("src/assets/css");
@@ -38,7 +35,7 @@ export default function (eleventyConfig) {
     galleryImages.map((img) => `/assets/images/gallery/${img.split("/").pop()}`)
   );
 
-  // ✅ Log output for debugging on Netlify
+  // ✅ Debugging Log
   eleventyConfig.on("afterBuild", () => {
     console.log("✅ Gallery images found:", galleryImages);
   });
