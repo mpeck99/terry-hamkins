@@ -32,12 +32,12 @@ export default function (eleventyConfig) {
 
   // ✅ Correctly fetch gallery images from the right folder
   const galleryImages = fg.sync(
-    "src/assets/images/gallery/*.{jpg,png,gif,webp,svg}"
+    "src/assets/images/trey/*.{jpg,png,gif,webp,svg}"
   );
 
   eleventyConfig.addCollection("gallery", () => {
     return galleryImages.map((img) => {
-      return `/assets/images/gallery/${img.split("/").pop()}`;
+      return `/assets/images/trey/${img.split("/").pop()}`;
     });
   });
 
